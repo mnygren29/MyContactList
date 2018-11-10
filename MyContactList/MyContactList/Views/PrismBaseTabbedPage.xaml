@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+            prism:ViewModelLocator.AutowireViewModel="True"
+            x:Class="MyContactList.Views.PrismBaseTabbedPage"
+             xmlns:local="clr-namespace:MyContactList.Views">
+
+    <TabbedPage.Children>
+        <local:MyContacts Title="My Contacts" />
+        <local:AddNewContact Title="Add New Contact" />
+    </TabbedPage.Children>
+
+</TabbedPage>

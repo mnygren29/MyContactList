@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="MyContactList.Views.AddNewContact">
+
+    <ScrollView>
+    <StackLayout VerticalOptions="Center"
+                 Margin="20">
+        <Frame CornerRadius="0" HasShadow="False" OutlineColor="Silver">
+            <StackLayout>
+                <Entry x:Name="FirstName" Text="{Binding FirstName}" 
+               Placeholder="First Name"
+               TextColor="{StaticResource blueColor}"/>
+                <Entry x:Name="LastName" Text="{Binding LastName}"
+               Placeholder="Last Name"
+               TextColor="{StaticResource blueColor}"
+               />
+                <Entry x:Name="Email" Text="{Binding Email}"
+               Placeholder="Email Address"
+               TextColor="{StaticResource blueColor}"
+               />
+                <Entry x:Name="ContactType" Text="{Binding ContactType}"
+               Placeholder="Contact Type"
+               TextColor="{StaticResource blueColor}"
+               />
+                <Button x:Name="AddContact"
+                Margin="0,25,0,0"
+                Text="Add Contact"
+                    TextColor="White"
+                Command="{Binding SubmitAddContact}"
+                BackgroundColor="DodgerBlue"/>
+                    <Button x:Name="GetDBContacts"
+                Margin="0,25,0,0"
+                Text="Get Contacts"
+                    TextColor="White"
+                Command="{Binding GetContacts}"
+                BackgroundColor="DodgerBlue"/>
+                </StackLayout>
+        </Frame>
+            <ListView ItemsSource="{Binding ListDbContacts}"
+                    HasUnevenRows="true">
+               
+                    <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding LastName}" TextColor="Green" DetailColor="PaleVioletRed" Detail="{Binding LastName}"></TextCell>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

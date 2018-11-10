@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+              xmlns:behaviors1="clr-namespace:MyContactList.Behaviors"
+             x:Class="MyContactList.Views.MyContacts">
+    <ContentPage.Content>
+        <StackLayout>
+        <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+            <Label Text="Filter"></Label>
+            <Picker Title="Loan Type Filter" ItemsSource="{Binding SortTypes}" SelectedItem="{Binding SelectedType}"
+               ItemDisplayBinding="{Binding SortNameType}">
+                <Picker.Behaviors>
+                    <behaviors1:PickerSelectBehavior x:Name="pickerValidator"></behaviors1:PickerSelectBehavior>
+                </Picker.Behaviors>
+            </Picker>
+        </StackLayout>
+            <SearchBar x:Name="SearchBar" Text="{Binding SearchText}" >
+                <SearchBar.Behaviors>
+                    <behaviors1:EventToCommandBehavior EventName="TextChanged" Command="{Binding SearchCommand}" />
+                </SearchBar.Behaviors>
+            </SearchBar>
+            <ListView ItemsSource="{Binding ContactsGrouped}"
+                    HasUnevenRows="true"
+                    GroupShortNameBinding = "{Binding Key}"
+                    IsGroupingEnabled = "true"
+                    GroupDisplayBinding = "{Binding Key}"
+              IsVisible="{Binding IsGroupListViewEnabled}">
+        <ListView.Behaviors>
+            <behaviors1:EventToCommandBehavior
+										EventName="ItemTapped"
+										EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+										Command="{Binding GetContactsDetailsCommand}" />
+        </ListView.Behaviors>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                        <TextCell Text="{Binding FirstLastName}" TextColor="Green" DetailColor="PaleVioletRed" Detail="{Binding SortNameType}"></TextCell>
+                       
+                    </DataTemplate>
+        </ListView.ItemTemplate>
+      
+    </ListView>
+            <ListView ItemsSource="{Binding Contact}"
+                    HasUnevenRows="true"
+                   IsVisible="{Binding IsListViewEnabled}"
+                   >
+                <ListView.Behaviors>
+                    <behaviors1:EventToCommandBehavior
+										EventName="ItemTapped"
+										EventArgsConverter="{StaticResource ItemTappedEventArgsConverter}"
+										Command="{Binding GetContactsDetailsCommand}" />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding FirstLastName}" TextColor="Green" DetailColor="PaleVioletRed" Detail="{Binding SortNameType}"></TextCell>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
