@@ -16,7 +16,7 @@
                 </Picker.Behaviors>
             </Picker>
         </StackLayout>
-            <SearchBar x:Name="SearchBar" Text="{Binding SearchText}" >
+             <SearchBar x:Name="SearchBar" Text="{Binding SearchText}" >
                 <SearchBar.Behaviors>
                     <behaviors1:EventToCommandBehavior EventName="TextChanged" Command="{Binding SearchCommand}" />
                 </SearchBar.Behaviors>

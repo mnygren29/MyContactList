@@ -4,6 +4,7 @@ using MyContactList.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,10 +18,14 @@ namespace MyContactList.ViewModels
 {
 	public class MyContactsViewModel : ViewModelBase
     {
+        
 
 
-        public ObservableCollection<Contacts> Contactsm { get; set; }
-        public ObservableCollection<Grouping<string, Contacts>> ContactsGrouped { get; set; }
+        // public ObservableCollection<Contacts> Contactsm { get; set; }
+        // public ObservableCollection<Grouping<string, Contacts>> ContactsGrouped { get; set; }
+
+        public ObservableCollection<ContactsDb> Contactsm { get; set; }
+        public ObservableCollection<Grouping<string, ContactsDb>> ContactsGrouped { get; set; }
 
         private readonly INavigationService _navigationService;
         private readonly IUnityContainer _unityContainer;
@@ -36,14 +41,24 @@ namespace MyContactList.ViewModels
         };
 
         public ObservableCollection<SortTypes> SortTypes { get => sortTypes; }
-        private async Task GetContactsDetailsCommandAsync(Contacts contact)
+        //private async Task GetContactsDetailsCommandAsync(Contacts contact)
+        //{
+
+        //    var navigationParamaters = new NavigationParameters();
+        //  // navigationParamaters.Add("quotedetail", contact.EmailAddress);
+
+        //    await _navigationService.NavigateAsync("ContactDetails", navigationParamaters);
+        //}
+
+        private async Task GetContactsDetailsCommandAsync(ContactsDb contact)
         {
 
             var navigationParamaters = new NavigationParameters();
-          // navigationParamaters.Add("quotedetail", contact.EmailAddress);
+            // navigationParamaters.Add("quotedetail", contact.EmailAddress);
 
             await _navigationService.NavigateAsync("ContactDetails", navigationParamaters);
         }
+
         SortTypes selectedType;
         public SortTypes SelectedType
         {
@@ -54,7 +69,7 @@ namespace MyContactList.ViewModels
                 if (selectedType.SortNameType == "Select Contact Type")
                 {
                     
-                   ContactsGrouped = _mobileApi.GetContactsGrouped();
+                   ContactsGrouped = _mobileApi.GetContactsGroupedDb();
                     RaisePropertyChanged("ContactsGrouped");
                 }
 
@@ -70,13 +85,15 @@ namespace MyContactList.ViewModels
                 if (selectedType.SortNameType == "First Name" || selectedType.SortNameType == "Last Name")
                 {
 
-                   ContactsGrouped = _mobileApi.GetContactsGrouped(selectedType.SortNameType);
+                   ContactsGrouped = _mobileApi.GetContactsGroupedDb(selectedType.SortNameType);
                     RaisePropertyChanged("ContactsGrouped");
                 }
 
 
             }
         }
+
+      
 
         private bool _isGroupListViewEnabled;
         public bool IsGroupListViewEnabled
@@ -100,7 +117,17 @@ namespace MyContactList.ViewModels
             }
         }
 
-        public ObservableCollection<Contacts> Contact
+        //public ObservableCollection<Contacts> Contact
+        //{
+        //    get { return _Items; }
+        //    set
+        //    {
+        //        _Items = value;
+        //        RaisePropertyChanged();
+        //    }
+        //}
+
+        public ObservableCollection<ContactsDb> Contact
         {
             get { return _Items; }
             set
@@ -111,8 +138,25 @@ namespace MyContactList.ViewModels
         }
 
 
-        private Contacts _selectedContact;
-        public Contacts SelectedContact
+        //private Contacts _selectedContact;
+        //public Contacts SelectedContact
+        //{
+        //    get { return _selectedContact; }
+        //    set
+        //    {
+        //        _selectedContact = value;
+        //        if (_selectedContact != null)
+        //        {
+        //          //  var navigationParameters = new NavigationParameters();
+        //           // navigationParameters.Add("borrowerdetail", _selectedContact);
+        //           // NavigationService.NavigateAsync("ContactDetails", navigationParameters);
+        //        }
+        //        RaisePropertyChanged();
+        //    }
+        //}
+
+        private ContactsDb _selectedContact;
+        public ContactsDb SelectedContact
         {
             get { return _selectedContact; }
             set
@@ -120,21 +164,25 @@ namespace MyContactList.ViewModels
                 _selectedContact = value;
                 if (_selectedContact != null)
                 {
-                  //  var navigationParameters = new NavigationParameters();
-                   // navigationParameters.Add("borrowerdetail", _selectedContact);
-                   // NavigationService.NavigateAsync("ContactDetails", navigationParameters);
+                    //  var navigationParameters = new NavigationParameters();
+                    // navigationParameters.Add("borrowerdetail", _selectedContact);
+                    // NavigationService.NavigateAsync("ContactDetails", navigationParameters);
                 }
                 RaisePropertyChanged();
             }
         }
 
-       private IMobileApi _mobileApi;
+        private IMobileApi _mobileApi;
 
        // public ICommand GetBorrowerDetailsCommand => new Command<Contacts>(async (item) => await GetBorrowerDetailsAsync(item));
 
-        private ObservableCollection<Contacts> _Items;
-        private ObservableCollection<Contacts> _ItemsFiltered;
-        private ObservableCollection<Contacts> _ItemsUnfiltered;
+        //private ObservableCollection<Contacts> _Items;
+        //private ObservableCollection<Contacts> _ItemsFiltered;
+        //private ObservableCollection<Contacts> _ItemsUnfiltered;
+
+        private ObservableCollection<ContactsDb> _Items;
+        private ObservableCollection<ContactsDb> _ItemsFiltered;
+        private ObservableCollection<ContactsDb> _ItemsUnfiltered;
 
         private string _searchText;
         public string SearchText
@@ -150,29 +198,39 @@ namespace MyContactList.ViewModels
         public MyContactsViewModel(INavigationService navigationService, IMobileApi mobileApi, IUnityContainer unityContainer)
             : base(navigationService)
         {
-            _isGroupListViewEnabled = true;
-            _isListViewEnabled = false;
-            RaisePropertyChanged("IsGroupListViewEnabled");
-            RaisePropertyChanged("IsListViewEnabled");
 
-            Contact = new ObservableCollection<Contacts>();
+            try
+            {
 
-            this._navigationService = navigationService;
-            this._unityContainer = unityContainer;
+                _isGroupListViewEnabled = true;
+                _isListViewEnabled = false;
+                RaisePropertyChanged("IsGroupListViewEnabled");
+                RaisePropertyChanged("IsListViewEnabled");
 
-            Title = "Contact Information";
+                // Contact = new ObservableCollection<Contacts>();
+                Contact = new ObservableCollection<ContactsDb>();
 
-            _mobileApi = mobileApi;
-            SearchCommand = new Prism.Commands.DelegateCommand(PerformSearch);
+                this._navigationService = navigationService;
+                this._unityContainer = unityContainer;
+
+                Title = "Contact Information";
+
+                _mobileApi = mobileApi;
+                SearchCommand = new Prism.Commands.DelegateCommand(PerformSearch);
 
 
-            SelectedType = SortTypes[0];
+                SelectedType = SortTypes[0];
 
-           LoadContactsm();
-            ContactsGrouped = _mobileApi.GetContactsGrouped();
+                LoadContactsm();
+                ContactsGrouped = _mobileApi.GetContactsGroupedDb();
 
-           LoadContact();
-            _navigationService = navigationService;
+                LoadContactDb();
+                _navigationService = navigationService;
+            }
+            catch(Exception ex)
+            {
+
+            }
 
            
         }
@@ -181,7 +239,7 @@ namespace MyContactList.ViewModels
         {
             if (string.IsNullOrWhiteSpace(this._searchText))
             {
-                ContactsGrouped = _mobileApi.GetContactsGrouped();
+                ContactsGrouped = _mobileApi.GetContactsGroupedDb();
                 RaisePropertyChanged("ContactsGrouped");
                 Contact = _ItemsUnfiltered;
                 _isGroupListViewEnabled = true;
@@ -192,14 +250,19 @@ namespace MyContactList.ViewModels
 
             else
             {
-                ContactsGrouped = _mobileApi.GetContactsGrouped();
+                ContactsGrouped = _mobileApi.GetContactsGroupedDb();
                 RaisePropertyChanged("ContactsGrouped");
 
 
-                _ItemsFiltered = new ObservableCollection<Contacts>(_ItemsUnfiltered
-                    .Where(i => (i is Contacts && (((Contacts)i)
-                    .FirstLastName.ToLower()
-                    .Contains(_searchText.ToLower())))));
+                //_ItemsFiltered = new ObservableCollection<Contacts>(_ItemsUnfiltered
+                //    .Where(i => (i is Contacts && (((Contacts)i)
+                //    .FirstLastName.ToLower()
+                //    .Contains(_searchText.ToLower())))));
+                _ItemsFiltered = new ObservableCollection<ContactsDb>(_ItemsUnfiltered
+                .Where(i => (i is ContactsDb && (((ContactsDb)i)
+                .FirstLastName.ToLower()
+                .Contains(_searchText.ToLower())))));
+
                 Contact = _ItemsFiltered;
                 RaisePropertyChanged("ContactsGrouped");
                 RaisePropertyChanged("Contactsm");
@@ -216,7 +279,7 @@ namespace MyContactList.ViewModels
             {
                
                 _Items.Clear();
-                var contacts = _mobileApi.GetContactsm();
+                var contacts = _mobileApi.GetContactsmDb();
                 foreach (var contact in contacts)
                 {
                     _Items.Add(contact);
@@ -234,7 +297,7 @@ namespace MyContactList.ViewModels
         public void LoadContactsm(string FilterType)
         {
             _Items.Clear();
-            var contacts = _mobileApi.GetContactsm(FilterType);
+            var contacts = _mobileApi.GetContactsmDb(FilterType);
             foreach (var contact in contacts)
             {
                 _Items.Add(contact);
@@ -248,7 +311,7 @@ namespace MyContactList.ViewModels
         public void LoadContacts(string FilterType)
         {
             _Items.Clear();
-            var contacts = _mobileApi.GetContacts(FilterType);
+            var contacts = _mobileApi.GetContactsDb(FilterType);
             foreach (var borrower in contacts)
             {
                 _Items.Add(borrower);
@@ -259,10 +322,27 @@ namespace MyContactList.ViewModels
 
         }
 
-        public void LoadContact()
+        //public void LoadContact()
+        //{
+
+        //    var contacts = _mobileApi.GetContacts();
+        //    foreach (var contact in contacts)
+        //    {
+        //        _Items.Add(contact);
+        //    }
+
+        //    var contacts_search = Contact;
+
+        //    _ItemsUnfiltered = new ObservableCollection<Contacts>(contacts_search);
+        //    Contact = new ObservableCollection<Contacts>(contacts_search);
+
+        //}
+
+
+        public void LoadContactDb()
         {
 
-            var contacts = _mobileApi.GetContacts();
+            var contacts = _mobileApi.GetContactsDb();
             foreach (var contact in contacts)
             {
                 _Items.Add(contact);
@@ -270,13 +350,10 @@ namespace MyContactList.ViewModels
 
             var contacts_search = Contact;
 
-            _ItemsUnfiltered = new ObservableCollection<Contacts>(contacts_search);
-            Contact = new ObservableCollection<Contacts>(contacts_search);
+            _ItemsUnfiltered = new ObservableCollection<ContactsDb>(contacts_search);
+            Contact = new ObservableCollection<ContactsDb>(contacts_search);
 
         }
-
-       
-
 
         //private async Task GetBorrowerDetailsAsync(Borrower borrower)
         //{
@@ -286,5 +363,12 @@ namespace MyContactList.ViewModels
 
         //    await _navigationService.NavigateAsync("BorrowerDetails", navigationParamaters);
         //}
+
+      
+
+
+
     }
+
+
 }

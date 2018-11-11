@@ -79,7 +79,7 @@ namespace MyContactList.Models
             }
         }
 
-        public string NameSort => LastName[0].ToString();
+        public string NameSort => _lastName[0].ToString();
 
         public string FirstLastName { get { return FirstName + " " + LastName; } }
 
