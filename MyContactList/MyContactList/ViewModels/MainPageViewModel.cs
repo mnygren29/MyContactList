@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace MyContactList.ViewModels
@@ -77,10 +78,6 @@ namespace MyContactList.ViewModels
                 RaisePropertyChanged();
             }
         }
-
-
-
-
         private string email;
         public string Email
         {
@@ -128,8 +125,12 @@ namespace MyContactList.ViewModels
 
         private async void GoToTabPage()
         {
-          
+            IsBusy = true;
+            await Task.Delay(3000);
+           
             await NavigationService.NavigateAsync("app:///NavigationPage/PrismBaseTabbedPage");
+            // do work son
+            IsBusy = false;
         }
 
         public void AddNewCustomer()

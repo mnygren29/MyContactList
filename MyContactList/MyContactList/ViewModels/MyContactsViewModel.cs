@@ -17,12 +17,7 @@ using Xamarin.Forms;
 namespace MyContactList.ViewModels
 {
 	public class MyContactsViewModel : ViewModelBase
-    {
-        
-
-
-        // public ObservableCollection<Contacts> Contactsm { get; set; }
-        // public ObservableCollection<Grouping<string, Contacts>> ContactsGrouped { get; set; }
+    {      
 
         public ObservableCollection<ContactsDb> Contactsm { get; set; }
         public ObservableCollection<Grouping<string, ContactsDb>> ContactsGrouped { get; set; }
@@ -37,19 +32,10 @@ namespace MyContactList.ViewModels
         {
              new SortTypes {SortNameType="First Name" },
             new SortTypes {SortNameType="Last Name" }
-            //new SortTypes{SortNameType="Conventional"}
+        
         };
 
         public ObservableCollection<SortTypes> SortTypes { get => sortTypes; }
-        //private async Task GetContactsDetailsCommandAsync(Contacts contact)
-        //{
-
-        //    var navigationParamaters = new NavigationParameters();
-        //  // navigationParamaters.Add("quotedetail", contact.EmailAddress);
-
-        //    await _navigationService.NavigateAsync("ContactDetails", navigationParamaters);
-        //}
-
         private async Task GetContactsDetailsCommandAsync(ContactsDb contact)
         {
 
@@ -62,20 +48,15 @@ namespace MyContactList.ViewModels
         SortTypes selectedType;
         public SortTypes SelectedType
         {
-
             get
             {
-
                 if (selectedType.SortNameType == "Select Contact Type")
                 {
                     
                    ContactsGrouped = _mobileApi.GetContactsGroupedDb();
                     RaisePropertyChanged("ContactsGrouped");
                 }
-
-
                 return selectedType;
-
             }
 
             set
@@ -88,12 +69,8 @@ namespace MyContactList.ViewModels
                    ContactsGrouped = _mobileApi.GetContactsGroupedDb(selectedType.SortNameType);
                     RaisePropertyChanged("ContactsGrouped");
                 }
-
-
             }
         }
-
-      
 
         private bool _isGroupListViewEnabled;
         public bool IsGroupListViewEnabled
@@ -115,17 +92,7 @@ namespace MyContactList.ViewModels
                 _isListViewEnabled = value;
                 RaisePropertyChanged();
             }
-        }
-
-        //public ObservableCollection<Contacts> Contact
-        //{
-        //    get { return _Items; }
-        //    set
-        //    {
-        //        _Items = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
+        }      
 
         public ObservableCollection<ContactsDb> Contact
         {
@@ -136,24 +103,6 @@ namespace MyContactList.ViewModels
                 RaisePropertyChanged();
             }
         }
-
-
-        //private Contacts _selectedContact;
-        //public Contacts SelectedContact
-        //{
-        //    get { return _selectedContact; }
-        //    set
-        //    {
-        //        _selectedContact = value;
-        //        if (_selectedContact != null)
-        //        {
-        //          //  var navigationParameters = new NavigationParameters();
-        //           // navigationParameters.Add("borrowerdetail", _selectedContact);
-        //           // NavigationService.NavigateAsync("ContactDetails", navigationParameters);
-        //        }
-        //        RaisePropertyChanged();
-        //    }
-        //}
 
         private ContactsDb _selectedContact;
         public ContactsDb SelectedContact
@@ -176,10 +125,7 @@ namespace MyContactList.ViewModels
 
        // public ICommand GetBorrowerDetailsCommand => new Command<Contacts>(async (item) => await GetBorrowerDetailsAsync(item));
 
-        //private ObservableCollection<Contacts> _Items;
-        //private ObservableCollection<Contacts> _ItemsFiltered;
-        //private ObservableCollection<Contacts> _ItemsUnfiltered;
-
+       
         private ObservableCollection<ContactsDb> _Items;
         private ObservableCollection<ContactsDb> _ItemsFiltered;
         private ObservableCollection<ContactsDb> _ItemsUnfiltered;
@@ -206,8 +152,6 @@ namespace MyContactList.ViewModels
                 _isListViewEnabled = false;
                 RaisePropertyChanged("IsGroupListViewEnabled");
                 RaisePropertyChanged("IsListViewEnabled");
-
-                // Contact = new ObservableCollection<Contacts>();
                 Contact = new ObservableCollection<ContactsDb>();
 
                 this._navigationService = navigationService;
@@ -231,8 +175,6 @@ namespace MyContactList.ViewModels
             {
 
             }
-
-           
         }
 
         public void PerformSearch()
@@ -252,12 +194,7 @@ namespace MyContactList.ViewModels
             {
                 ContactsGrouped = _mobileApi.GetContactsGroupedDb();
                 RaisePropertyChanged("ContactsGrouped");
-
-
-                //_ItemsFiltered = new ObservableCollection<Contacts>(_ItemsUnfiltered
-                //    .Where(i => (i is Contacts && (((Contacts)i)
-                //    .FirstLastName.ToLower()
-                //    .Contains(_searchText.ToLower())))));
+               
                 _ItemsFiltered = new ObservableCollection<ContactsDb>(_ItemsUnfiltered
                 .Where(i => (i is ContactsDb && (((ContactsDb)i)
                 .FirstLastName.ToLower()
@@ -322,23 +259,7 @@ namespace MyContactList.ViewModels
 
         }
 
-        //public void LoadContact()
-        //{
-
-        //    var contacts = _mobileApi.GetContacts();
-        //    foreach (var contact in contacts)
-        //    {
-        //        _Items.Add(contact);
-        //    }
-
-        //    var contacts_search = Contact;
-
-        //    _ItemsUnfiltered = new ObservableCollection<Contacts>(contacts_search);
-        //    Contact = new ObservableCollection<Contacts>(contacts_search);
-
-        //}
-
-
+      
         public void LoadContactDb()
         {
 
@@ -354,21 +275,5 @@ namespace MyContactList.ViewModels
             Contact = new ObservableCollection<ContactsDb>(contacts_search);
 
         }
-
-        //private async Task GetBorrowerDetailsAsync(Borrower borrower)
-        //{
-
-        //    var navigationParamaters = new NavigationParameters();
-        //    navigationParamaters.Add("quotedetail", borrower.id);
-
-        //    await _navigationService.NavigateAsync("BorrowerDetails", navigationParamaters);
-        //}
-
-      
-
-
-
     }
-
-
 }

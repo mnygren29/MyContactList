@@ -11,6 +11,17 @@ namespace MyContactList.ViewModels
     {
         protected INavigationService NavigationService { get; private set; }
 
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                RaisePropertyChanged();
+            }
+        }
+
         private string _title;
         public string Title
         {
