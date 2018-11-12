@@ -110,13 +110,12 @@ namespace MyContactList.ViewModels
             SubmitCommand = new DelegateCommand(GoToTabPage);
 
             database =
-    DependencyService.Get<IDatabaseConnection>().
-    DbConnection();
-            database.CreateTable<ContactsDb>();
+                DependencyService.Get<IDatabaseConnection>().
+                DbConnection();
+                database.CreateTable<ContactsDb>();
+
             this.ContactsTable =
               new ObservableCollection<ContactsDb>(database.Table<ContactsDb>());
-
-          //  RaisePropertyChanged("ContactsTable");
 
             AddNewCustomer();
 
@@ -127,15 +126,12 @@ namespace MyContactList.ViewModels
         {
             IsBusy = true;
             await Task.Delay(3000);
-           
             await NavigationService.NavigateAsync("app:///NavigationPage/PrismBaseTabbedPage");
-            // do work son
             IsBusy = false;
         }
 
         public void AddNewCustomer()
         {
-
             try
             {
                 if (!database.Table<ContactsDb>().Any())

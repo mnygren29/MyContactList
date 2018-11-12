@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Linq;
+using SQLite;
+using Xamarin.Forms;
+using MyContactList.Interfaces;
 
 namespace MyContactList.Infrastructure
 {
@@ -11,16 +14,25 @@ namespace MyContactList.Infrastructure
     {
 
         private static Random random;
+        private static SQLiteConnection database;
+        private static object collisionLock = new object();
 
         public static Contacts GetRandomContact()
         {
-       
+
             return Contacts_[random.Next(0, Contacts_.Count)];
         }
 
         public static ObservableCollection<Grouping<string, Contacts>> ContactsGrouped_ { get; set; }
 
         public static ObservableCollection<Contacts> Contacts_ { get; set; }
+
+        public static void initializeDatabase()
+        {
+            database =
+            DependencyService.Get<IDatabaseConnection>().
+            DbConnection();
+        }
 
        
         static ContactsHelper()

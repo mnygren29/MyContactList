@@ -32,11 +32,7 @@ namespace MyContactList.Services
 
      
         public ObservableCollection<Grouping<string, ContactsDb>> ContacsGroupedm { get; set; }
-
-       
         public List<ContactsDb> Contactsm { get; set; }
-
-      
         public List<Grouping<string, ContactsDb>> ContactsGroupedList { get; set; }
 
         private List<ContactsDb> _listDbContacts;
@@ -52,10 +48,6 @@ namespace MyContactList.Services
                // RaisePropertyChanged();
             }
         }
-
-
-        
-
         public ObservableCollection<Grouping<string, ContactsDb>> GetContactsGroupedDb()
         {
             random = new Random();

@@ -10,15 +10,16 @@ using MyContactList.Models;
 using Prism.Navigation;
 using Unity;
 using MyContactList.Interfaces;
+using Prism.Services;
 
 namespace MyContactList.ViewModels
 {
 	public class AddNewContactViewModel : ViewModelBase
     {
+        IPageDialogService _pageDialog;
         private SQLiteConnection database;
         private static object collisionLock = new object();
         public ObservableCollection<ContactsDb> ContactsTable { get; set; }
-       
         private readonly INavigationService _navigationService;
         private readonly IUnityContainer _unityContainer;
         private IMobileApi _mobileApi;
@@ -93,7 +94,7 @@ namespace MyContactList.ViewModels
             }
         }
 
-        public AddNewContactViewModel(INavigationService navigationService, IMobileApi mobileApi, IUnityContainer unityContainer)
+        public AddNewContactViewModel(INavigationService navigationService, IMobileApi mobileApi, IUnityContainer unityContainer, IPageDialogService pageDialog)
             : base(navigationService)
         {
             this._navigationService = navigationService;
@@ -102,21 +103,23 @@ namespace MyContactList.ViewModels
             Title = "Add Contact";
 
             _mobileApi = mobileApi;
+            _pageDialog = pageDialog;
 
             database =
-    DependencyService.Get<IDatabaseConnection>().
-    DbConnection();
+                Xamarin.Forms.DependencyService.Get<IDatabaseConnection>().
+                DbConnection();
+
             database.CreateTable<ContactsDb>();
             this.ContactsTable =
-              new ObservableCollection<ContactsDb>(database.Table<ContactsDb>());
-            // If the table is empty, initialize the collection
-          
-              //  AddNewCustomer();
+            new ObservableCollection<ContactsDb>(database.Table<ContactsDb>());
            
-
-
             SubmitAddContact = new DelegateCommand(AddNewCustomer);
             GetContacts = new DelegateCommand(GetAllContacts);
+        }
+
+        public void showAlert(string title,string AlertMessage)
+        {
+            _pageDialog.DisplayAlertAsync(title, AlertMessage , "OK");
         }
 
         public void AddNewCustomer()
@@ -144,10 +147,12 @@ namespace MyContactList.ViewModels
                             if (contactInstance.Id != 0)
                             {
                                 database.Update(contactInstance);
+                                showAlert("Success","Record succesfully updated!");
                             }
                             else
                             {
                                 database.Insert(contactInstance);
+                                showAlert("Success", "Record succesfully added!");
                             }
                         }
                     }
@@ -155,9 +160,8 @@ namespace MyContactList.ViewModels
             }
             catch(Exception ex)
             {
-
+                showAlert("Failed", "We're sorry we could not add the record at this time.");
             }
-
         }
 
         public void GetAllContacts()
@@ -170,9 +174,6 @@ namespace MyContactList.ViewModels
                 _listDbContacts= query.ToList();
                 RaisePropertyChanged("ListDbContacts");
             }
-
-          
-
         }
 
     }
