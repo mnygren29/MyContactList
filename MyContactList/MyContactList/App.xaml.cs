@@ -17,7 +17,10 @@ namespace MyContactList
          * This imposes a limitation in which the App class must have a default constructor. 
          * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
          */
-        public App() : this(null) { }
+        public App() : this(null) {
+
+
+        }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
 
@@ -25,7 +28,8 @@ namespace MyContactList
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+              await NavigationService.NavigateAsync("NavigationPage/MainPage");
+             // await NavigationService.NavigateAsync("NavigationPage/PrismMasterDetailPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -38,6 +42,11 @@ namespace MyContactList
             containerRegistry.RegisterForNavigation<MyContacts, MyContactsViewModel>();
             containerRegistry.RegisterForNavigation<AddNewContact, AddNewContactViewModel>();
             containerRegistry.RegisterForNavigation<ContactDetails, ContactDetailsViewModel>();
+            containerRegistry.RegisterForNavigation<PrismMasterDetailPage, PrismMasterDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<UserSettings, UserSettingsViewModel>();
+         
+
+
         }
     }
 }

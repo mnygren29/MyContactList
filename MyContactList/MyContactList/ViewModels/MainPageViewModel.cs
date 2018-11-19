@@ -125,9 +125,10 @@ namespace MyContactList.ViewModels
         private async void GoToTabPage()
         {
             IsBusy = true;
-            await Task.Delay(3000);
+           // await Task.Delay(3000);
             await NavigationService.NavigateAsync("app:///NavigationPage/PrismBaseTabbedPage");
-            IsBusy = false;
+          //  await NavigationService.NavigateAsync("app:///NavigationPage/PrismMasterDetailPage");
+             IsBusy = false;
         }
 
         public void AddNewCustomer()
